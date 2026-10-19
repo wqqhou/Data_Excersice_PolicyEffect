@@ -11,3 +11,4 @@ data/interim/
 .DS_Store
 output/*
 *.out
+balance_results/*
