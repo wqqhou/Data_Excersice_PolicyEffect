@@ -1,0 +1,26 @@
+\begin{table}[htbp]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\caption{Pre-policy balance}
+\label{tab:baseline_balance}
+\begin{tabular}{lrrrrr}
+\hline
+Variable & Treated mean (SD) & Control mean (SD) & Difference & SMD & Approx. $p$ \\
+\hline
+Age (years) & 40.88 (10.57) & 40.84 (10.38) & 0.04 & 0.00 & 0.942 \\
+College (\%) & 38.16 (48.65) & 36.48 (48.19) & 1.68 & 0.03 & 0.584 \\
+Monthly earnings (USD) & 3,657.29 (1,606.47) & 3,402.28 (1,277.75) & 255.01 & 0.18 & 0.171 \\
+Weekly hours & 38.12 (3.21) & 38.01 (3.24) & 0.11 & 0.03 & 0.723 \\
+\hline
+\end{tabular}
+\par\smallskip
+\begin{minipage}{\textwidth}
+\footnotesize
+Baseline: February 2016. One observation per person. Employed at baseline (wages $>$ 0 and hours $>$ 0).
+ Treatment group: Kansas/Utah; control group: Colorado/Montana/Wyoming. Differences are treated minus control. College differences are percentage points.
+ State-clustered CR1 tests use a conventional small-sample correction and a $t_{G-1}$ reference. P-values are approximate; inference is fragile with five states and only two treated states.
+ SMD uses the square root of the average of the two within-group variances. Failure to reject does not establish equivalence or parallel trends.
+ Sample sizes (treated/control): Age (years): 359/477; College (\%): 359/477; Monthly earnings (USD): 359/477; Weekly hours: 359/477.
+\end{minipage}
+\end{table}

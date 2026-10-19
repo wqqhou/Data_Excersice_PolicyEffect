@@ -1,0 +1,16 @@
+Baseline: February 2016. One observation per person. Employed at baseline (wages > 0 and hours > 0).
+Input baseline N=836; analysis baseline N=836; excluded by employment filter=0.
+Treatment group: Kansas/Utah; comparison: Colorado/Montana/Wyoming, using baseline residence.
+Differences are treated minus control, using person-weighted means. College is in percent; its difference is in percentage points.
+H0 for each row: equal pre-policy group means; H1: unequal means (two-sided).
+SMD = difference / sqrt((SD_treated^2 + SD_control^2)/2). N and state counts reflect each variable's nonmissing sample.
+SEs: state-clustered CR1 for OLS on an intercept and treatment indicator, with G/(G-1)*(N-1)/(N-2) correction. P-values use t(G-1).
+CAUTION: p-values are approximate. Five states, including only two treated states, are too few for dependable conventional clustered inference.
+Unavailable inference is reported as NA if there are fewer than two states per arm, too few observations, or a zero/negligible SE.
+Failure to reject does not establish equivalence or parallel trends. Baseline mean differences do not by themselves invalidate DiD.
+
+              variable  n_treated  n_control  mean_treated  mean_control  difference_t_minus_c  standardized_difference  p_state_cluster_approx
+           Age (years)        359        477       40.8802       40.8407                0.0396                   0.0038                  0.9421
+           College (%)        359        477       38.1616       36.4780                1.6836                   0.0348                  0.5845
+Monthly earnings (USD)        359        477     3657.2875     3402.2814              255.0062                   0.1757                  0.1712
+          Weekly hours        359        477       38.1226       38.0147                0.1079                   0.0334                  0.7225

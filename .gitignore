@@ -1,6 +1,7 @@
-venv/*
-./scripts/_pycache_/*
-./data/interim/*
+venv/
+.venv/
+__pycache__/
+data/interim/
 *.aux
 *.fdb_latexmk
 *.fls
@@ -8,3 +9,5 @@ venv/*
 *.synctex.gz
 *.pyc
 .DS_Store
+output/*
+*.out

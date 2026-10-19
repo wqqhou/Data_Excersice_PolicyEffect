@@ -5,16 +5,183 @@
 \usepackage{setspace}
 \usepackage{caption}
 \usepackage{float}
+\usepackage{placeins}
+\usepackage{adjustbox}
+\usepackage{etoolbox}
+\usepackage{needspace}
+\usepackage[hidelinks]{hyperref}
 
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.35em plus 0.1em minus 0.1em}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\textfloatsep}{8pt plus 2pt minus 2pt}
+\raggedbottom
+
+\graphicspath{{output/plot/}}
+\captionsetup{font=small,labelfont=bf,skip=4pt}
+\BeforeBeginEnvironment{tabular}{\begin{adjustbox}{max width=\linewidth}}
+\AfterEndEnvironment{tabular}{\end{adjustbox}}
 
 \begin{document}
 
 \noindent
 \textbf{DATE:} \today \newline
 \textbf{STUDENT:} Ellie Hou \newline
-\textbf{SUBJECT:} STAT4101 HW3\par
+\textbf{SUBJECT:} Metcalfe Pre-Doc Hiring Task\par
 \normalsize
 
-\section*{2.139}
+\section*{Question 1: Minimum-wage policy}
 
+\subsection*{Data filtering and validation}
+I used observations from January 2015 to December 2017 for the five study
+states. I converted numeric fields and checked for missing values, finite
+person identifiers, ages strictly between 0 and 150, binary college status,
+integer weekly hours from 0 to 167, and finite, nonnegative earnings. For
+state records, I converted employment rates from percentages to proportions,
+required rates strictly between 0 and 1, and checked that population,
+average wages, and minimum wages were positive and finite. These checks
+removed no rows. I checked uniqueness of person--month and state--month
+records and removed one exact duplicate Kansas record for March 2016,
+retaining the first copy. This left 30,240 individual observations and
+180 state--month records. I retained zero earnings for the initial wage
+distribution, but excluded 134 zero-earnings person--months from the
+positive-earnings analysis sample, leaving 30,106 observations. Log wages
+were calculated only for this sample. Employment filtering was applied
+separately in each month.
+
+\Needspace{\dimexpr0.3\textheight+6\baselineskip\relax}
+\subsection*{(a.i) Distribution of monthly wages}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.78\linewidth,height=0.3\textheight]{figure1_wage_distribution.png}
+    \caption{Distribution of monthly earnings, including nonemployed individuals.}
+    \label{fig:wage-distribution}
+\end{figure}
+\FloatBarrier
+
+\Needspace{\dimexpr0.3\textheight+6\baselineskip\relax}
+\subsection*{(a.ii) Distribution of log monthly wages}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.78\linewidth,height=0.3\textheight,]{figure2_log_wage_distribution.png}
+    \caption{Distribution of log monthly earnings among individuals with positive earnings.}
+    \label{fig:log-wage-distribution}
+\end{figure}
+\FloatBarrier
+
+\Needspace{0.43\textheight}
+\subsection*{(b) Average wages by hours worked and state}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figure3_wage_dif_workhour.png}
+    \caption{Mean monthly earnings by weekly hours worked in the positive-earnings
+    sample, with a separate line for each state.}
+    \label{fig:wages-by-hours}
+\end{figure}
+\FloatBarrier
+
+\subsection*{(c) Treatment groups, policy timing, and baseline balance}
+Kansas and Utah are the treatment states; Colorado, Montana, and Wyoming
+are the comparison states. The post-policy period begins in March 2016.
+The balance table uses February 2016 residence and includes individuals
+employed in that month.
+\input{balance_results/balance_table.tex}
+\FloatBarrier
+
+
+\subsection*{(d) Difference-in-differences assumptions and time trends}
+A causal DiD interpretation requires three assumptions. \textit{Parallel
+trends} means that, without the policy, treated and comparison outcomes
+would have changed similarly. \textit{No anticipation} means that behavior
+does not respond before implementation. \textit{No spillovers} means that
+the policy does not affect outcomes in comparison states.
+Figure~\ref{fig:outcome-trends} shows broadly similar pre-policy patterns in
+hours, but earnings diverge before March 2016, particularly in late 2015
+and early 2016. This suggests possible anticipation, although different
+underlying trends could also explain it. The baseline balance tests do not
+reject equality of the reported means, but they do not establish parallel
+trends. Neither the graph nor these tests verify no spillovers. The
+pre-policy earnings divergence therefore calls for caution in interpreting
+the estimates causally.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\linewidth]{figure4_monthly_earnings_hours.png}
+    \caption{Mean monthly earnings (Panel A) and weekly hours (Panel B) over time.
+    Groups are fixed by February 2016 residence; movers retain their baseline
+    group. Monthly means use observed employed members of the baseline-employed
+    cohort. The dashed lines mark March 2016.}
+    \label{fig:outcome-trends}
+\end{figure}
+\FloatBarrier
+
+\subsection*{(e) Policy effects on earnings and hours worked}
+The regression specification is
+\begin{equation}
+    Y_{ist} = \alpha_s + \lambda_t
+    + \beta\bigl(\mathrm{treated}_s \times \mathrm{post}_t\bigr)
+    + \varepsilon_{ist},
+    \label{eq:did}
+\end{equation}
+This is a standard two-way fixed-effects DiD specification. State effects
+$\alpha_s$ absorb persistent state differences; calendar-month effects
+$\lambda_t$ absorb common shocks, but not changing state-specific shocks.
+The outcomes are log monthly earnings and weekly hours in levels, using
+the positive-earnings sample and current-state treatment assignment.
+
+I cluster standard errors by state because policy varies at that level and
+errors may be correlated across residents and over time, including repeated
+observations on nonmovers. Movers can introduce cross-state dependence.
+Given only five clusters, I apply the conventional finite-sample covariance
+correction once and use Student's $t$ with $G-1=4$ degrees of freedom for
+tests and confidence intervals. Inference remains approximate with only
+two treated states. Table~\ref{tab:did} estimates 0.184 log points higher
+earnings and 1.19 fewer weekly hours, conditional on the identifying
+assumptions.
+\input{output/regression/did_table.tex}
+\FloatBarrier
+
+\subsection*{(f) Individual versus state fixed effects}
+Replacing state fixed effects with individual fixed effects accounts for persistent differences between people, such as stable ability and work preferences. Together with calendar-time fixed effects, this identifies the policy coefficient from within-person changes relative to changes among comparison-group individuals, rather than controlling only for persistent differences between states.
+
+For individuals who remain in the same state, individual fixed effects also absorb time-invariant state characteristics. They do not, however, account for changing state-specific shocks, and movers require additional consideration.
+
+
+\subsection*{(g) Individuals who move across states}
+\input{output/movers/mover_summary.tex}Their small number does not establish that their influence is negligible, and any resulting bias could be positive or negative.
+
+When treatment follows current residence, movers can change policy exposure. Migration related to wage opportunities or the policy itself could therefore confound the estimated effect. I would assess sensitivity by excluding movers, recognizing that this changes the population to observed nonmovers and may introduce selection if the policy affects migration.
+
+An alternative is to classify individuals by their pre-policy residence and retain them after moving. This estimates the effect associated with their original state’s policy, rather than the effect of current policy exposure.
+\subsection*{(h) Controlling for state employment rates}
+I would omit the contemporaneous state employment rate from the baseline specification because the minimum-wage policy may itself affect employment. Controlling for it could remove part of the policy’s effect on earnings or hours, or condition on policy-induced changes in who remains employed. Additional controls should address plausible confounding and should not themselves be consequences of the reform. Employment could instead be examined as an additional outcome or mechanism. 
+\subsection*{(i) National and state inflation controls}
+The supplied earnings are measured in current dollars and therefore are nominal. A national inflation series is common across states in each month, so a separate national inflation regressor would be perfectly collinear with full year-month fixed effects.
+
+These fixed effects do not convert dollar-valued earnings into purchasing-power units. To study real earnings, I would deflate nominal earnings using an appropriate price index, which is not supplied. With log earnings, national deflation subtracts a common monthly term already absorbed by the time fixed effects, leaving the policy coefficient unchanged; this equivalence does not generally hold for earnings in levels.
+
+State-specific inflation is not generally absorbed by common time fixed effects. However, controlling for it requires care if the policy affects local prices. Defining an outcome using locally deflated earnings instead would measure the policy’s effect on purchasing power, including its price effects.
+
+\subsection*{(j) Limitations, improvements, and the ideal dataset}
+The analysis includes only five states and two treated states, limiting inference and generalizability. Calendar-time fixed effects do not eliminate changing state-specific shocks. Colorado and Montana also change their minimum wages, complicating their use as comparison states.\footnote{Source: supplied \textit{Data Description}, ``Minimum wage schedule,'' and \texttt{monthly\_state\_data.csv}. Colorado: \$8.23 (2015), \$8.31 (2016), \$9.30 (2017); Montana: \$8.05 (2015--2016), \$8.15 (2017). These are the exercise's hypothetical policy values.} Migration and an employed-only sample create selection concerns, while monthly earnings combine changes in hourly pay and hours worked.
+
+I would seek more comparable jurisdictions, a longer pre-policy period, and justified controls for local confounding, and assess sensitivity to comparison groups and sample restrictions.
+
+Residence may differ from workplace location, causing treatment misclassification for cross-state commuters. An ideal dataset would track individuals through employment and nonemployment and include hourly pay, hours, employer identifiers, workplace and residence, industry, occupation, local prices, and other policies. Pre-policy hourly wages relative to the new minimum would help measure exposure and examine heterogeneous effects.
+
+\clearpage
+
+\section*{Question 2: Generative AI and workers}
+
+\subsection*{(a) Effects on workers' wages}
+In the short run, I expect downward pressure on wages for workers whose tasks GenAI can perform; firms facing adjustment costs may first slow hiring or wage growth rather than lay off existing staff. In the longer run, wages could rise as firms reorganize production and demand shifts toward skills that complement AI. The outcome depends on how easily tasks can be automated, whether productivity gains expand demand enough to offset substitution, and how much of those gains workers receive through higher pay.
+
+\subsection*{(b) Firm tasks and labor demand}
+An idea from my human resources coursework is that growing firms often move from reliance on an owner's judgment toward more repeatable organizational procedures.\footnote{For a related organizational-growth framework, see Larry E. Greiner, \href{https://store.hbr.org/product/evolution-and-revolution-as-organizations-grow/98308}{``Evolution and Revolution as Organizations Grow,''} \textit{Harvard Business Review}, May--June 1998 (originally published July--August 1972).} I expect GenAI to take over routine drafting, such as product descriptions and standard customer replies, while helping owners develop promotions and compare business options using their local knowledge. This could let a short-staffed business test initiatives before committing to new hires. Labor demand could rise if higher sales require more cooking, restocking, or customer service, but fall if time savings exceed the labor needed to expand output.
+
+\subsection*{(c) An open question and a feasible experiment}
+My main question is whether cheaper AI-generated content can overwhelm limited attention and reduce the rewards to high-quality work, for example through congested peer review or declining engagement with sales outreach. In a marketing-platform experiment, I would randomly assign consenting recipient groups to higher or lower volumes of AI-assisted outreach drawn from the same message pool, while sending an identical, independently rated useful offer to both groups. I would measure responses to that fixed offer, total purchases per recipient, unsubscribes, and sales per worker-hour. A challenge is distinguishing temporary congestion from adverse selection, where difficulty identifying quality reduces participation by high-quality senders; this would require longer follow-up on sender participation and content quality.
+
+\subsection*{(d) A policy proposal and pilot}
+I would prioritize subsidized training that helps workers develop skills complementary to AI, building on the OECD’s recommendations to expand access to AI-related skills. As discussed in part (a), AI’s effects on workers depend partly on the balance between substitution and complementarity, so training could help shift that balance in workers’ favor. I would initially target industries with documented labor shortages, where firms have incentives to expand capacity and productivity gains may help meet unmet demand with less immediate displacement. Within these industries, I would randomly offer participating workplaces training and paid learning time immediately or after a waiting period, comparing worker earnings, hours, retention, new hiring, and productivity over six to twelve months. \footnote{OECD (2026). AI and skills: What we know so far. OECD Publishing, Paris. See the section “What can policymakers do?” \href{https://doi.org/10.1787/f843b352-en}{https://doi.org/10.1787/f843b352-en}}
 \end{document}
