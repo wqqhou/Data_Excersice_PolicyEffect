@@ -96,10 +96,12 @@ trends} means that, without the policy, treated and comparison outcomes
 would have changed similarly. \textit{No anticipation} means that behavior
 does not respond before implementation. \textit{No spillovers} means that
 the policy does not affect outcomes in comparison states.
-Figure~\ref{fig:outcome-trends} shows broadly similar pre-policy patterns in
-hours, but earnings diverge before March 2016, particularly in late 2015
-and early 2016. This suggests possible anticipation, although different
-underlying trends could also explain it. The baseline balance tests do not
+Figure~\ref{fig:outcome-trends} shows broadly similar pre-policy patterns in weekly 
+hours, but the treated–comparison gap in mean log monthly earnings changes 
+before March 2016. This raises concern about parallel trends in the outcome 
+used in the earnings regression. Anticipation, different underlying trends, 
+or changes in sample composition could explain this pattern, while the graph alone 
+cannot distinguish these explanations. The baseline balance tests do not
 reject equality of the reported means, but they do not establish parallel
 trends. Neither the graph nor these tests verify no spillovers. The
 pre-policy earnings divergence therefore calls for caution in interpreting
@@ -107,7 +109,8 @@ the estimates causally.
 \begin{figure}[H]
     \centering
     \includegraphics[width=\linewidth]{figure4_monthly_earnings_hours.png}
-    \caption{Mean monthly earnings (Panel A) and weekly hours (Panel B) over time.
+    \caption{Mean log monthly earnings (Panel A) and weekly hours (Panel B) over time.
+    Earnings use natural logarithms.
     Groups are fixed by February 2016 residence; movers retain their baseline
     group. Monthly means use observed employed members of the baseline-employed
     cohort. The dashed lines mark March 2016.}
@@ -163,7 +166,7 @@ These fixed effects do not convert dollar-valued earnings into purchasing-power 
 State-specific inflation is not generally absorbed by common time fixed effects. However, controlling for it requires care if the policy affects local prices. Defining an outcome using locally deflated earnings instead would measure the policy’s effect on purchasing power, including its price effects.
 
 \subsection*{(j) Limitations, improvements, and the ideal dataset}
-The analysis includes only five states and two treated states, limiting inference and generalizability. Calendar-time fixed effects do not eliminate changing state-specific shocks. Colorado and Montana also change their minimum wages, complicating their use as comparison states.\footnote{Source: supplied \textit{Data Description}, ``Minimum wage schedule,'' and \texttt{monthly\_state\_data.csv}. Colorado: \$8.23 (2015), \$8.31 (2016), \$9.30 (2017); Montana: \$8.05 (2015--2016), \$8.15 (2017). These are the exercise's hypothetical policy values.} Migration and an employed-only sample create selection concerns, while monthly earnings combine changes in hourly pay and hours worked.
+The analysis includes only five states and two treated states, limiting inference and generalizability. Calendar-time fixed effects do not eliminate changing state-specific shocks. Colorado and Montana’s minimum-wage adjustments follow existing inflation-indexing rules, while Wyoming’s nominal floor remains fixed. These differing regimes may affect the comparability of earnings trends in the absence of the Kansas–Utah reform.\footnote{Source: supplied \textit{Data Description}, ``Minimum wage schedule,'' and \texttt{monthly\_state\_data.csv}. Colorado: \$8.23 (2015), \$8.31 (2016), \$9.30 (2017); Montana: \$8.05 (2015--2016), \$8.15 (2017). These are the exercise's hypothetical policy values.} Migration and an employed-only sample create selection concerns, while monthly earnings combine changes in hourly pay and hours worked.
 
 I would seek more comparable jurisdictions, a longer pre-policy period, and justified controls for local confounding, and assess sensitivity to comparison groups and sample restrictions.
 

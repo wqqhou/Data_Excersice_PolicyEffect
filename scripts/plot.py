@@ -103,13 +103,13 @@ def plot_3(df, output_path):
 
 
 def plot_4(df, output_path, baseline="2016-02-01"):
-    """Q1(d): monthly outcomes for the baseline-employed cohort."""
+    """Q1(d): log earnings and hours for the baseline-employed cohort."""
     policy_date = pd.Timestamp("2016-03-01")
     baseline_date = pd.Timestamp(baseline).to_period("M").to_timestamp()
     if pd.isna(baseline_date) or baseline_date >= policy_date:
         raise ValueError("The baseline must be a valid month before March 2016.")
 
-    columns = ["person_id", "date", "state_name", "wages", "hours_worked"]
+    columns = ["person_id", "date", "state_name", "wages", "ln_wages", "hours_worked"]
     data = df[columns].copy()
     data["date"] = pd.to_datetime(data["date"]).dt.to_period("M").dt.to_timestamp()
     if data[["person_id", "date"]].isna().any().any():
@@ -138,7 +138,7 @@ def plot_4(df, output_path, baseline="2016-02-01"):
     )
     # Average observed employed members within each month and group.
     monthly = sample.groupby(["group", "date"], as_index=False).agg(
-        mean_earnings=("wages", "mean"),
+        mean_log_earnings=("ln_wages", "mean"),
         mean_hours=("hours_worked", "mean"),
     )
 
@@ -147,7 +147,7 @@ def plot_4(df, output_path, baseline="2016-02-01"):
     sns.set_theme(style="whitegrid")
     fig, axes = plt.subplots(1, 2, figsize=(15, 6), sharex=True)
     panels = [
-        ("mean_earnings", "Panel A: Mean monthly earnings", "Monthly earnings (USD)"),
+        ("mean_log_earnings", "Panel A: Mean log monthly earnings", "Log monthly earnings (natural log)"),
         ("mean_hours", "Panel B: Mean weekly hours", "Weekly hours"),
     ]
     colors = ["#dd8452", "#4c72b0"]
@@ -163,7 +163,6 @@ def plot_4(df, output_path, baseline="2016-02-01"):
         ax.set_ylabel(ylabel, fontsize=12)
         ax.xaxis.set_major_locator(mdates.MonthLocator(bymonth=[1, 7]))
         ax.xaxis.set_major_formatter(mdates.DateFormatter("%b\n%Y"))
-    axes[0].yaxis.set_major_formatter(FuncFormatter(lambda value, _: f"${value:,.0f}"))
     fig.suptitle("Monthly outcomes by baseline state group", fontsize=16, fontweight="bold")
     handles, labels = axes[0].get_legend_handles_labels()
     fig.legend(
